@@ -189,12 +189,16 @@
 				<div class="col-md-12">
 					<?php 
 						if (isset($_POST['url'])) {
-							
+						
 							$crawler = new Crawler();
 							
 							$url = $_POST['url'];
 							
-							$crawler->crawl_urls($url);
+							if ($_POST['domain_specific'] === 'on') {
+								$crawler->crawl_urls($url, true);
+							} else {
+								$crawler->crawl_urls($url);
+							}
 							
 						}
 					?>

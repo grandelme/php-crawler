@@ -18,6 +18,22 @@ class Crawler {
 	private $db;
 	
 	/**
+	 * domain_specific
+	 * 
+	 * @var bool
+	 * @access private
+	 */
+	private $domain_specific;
+	
+	/**
+	 * domain
+	 * 
+	 * @var string
+	 * @access private
+	 */
+	private $domain;
+	
+	/**
 	 * __construct function.
 	 * 
 	 * @access public
@@ -35,12 +51,30 @@ class Crawler {
 	 * 
 	 * @access public
 	 * @param mixed $url
+	 * @param bool $domain_specific (default: false)
 	 * @return void
 	 */
-	public function crawl_urls($url) {
+	public function crawl_urls($url, $domain_specific = false) {
 		
-		// insert the first url in the database
-		$this->insert_url($url);
+		if ($domain_specific === true) {
+			
+			$this->domain_specific = true;
+			
+			// get the domain specific string
+			$this->domain = parse_url($url)['host'];
+			
+			// check if the url is from the domain specific
+			if ($this->string_contains($url, $this->domain)) {
+				// insert the first url in the database
+				$this->insert_url($url);
+			}
+			
+		} else {
+			
+			// insert the first url in the database
+			$this->insert_url($url);
+			
+		}
 		
 		// loop through urls while there are non visited urls in the database
 		while ($this->there_are_non_visited_urls_in_database() === true) {
@@ -123,6 +157,12 @@ class Crawler {
 		
 		// for every url find on the datas variable
 		foreach ($urls[0] as $url) {
+			
+			if ($this->domain_specific === true) {
+				if (!$this->string_contains($url, $this->domain)) {
+					continue;
+				}
+			}
 			
 			// we want only urls that are equal ore shorter than 1000 characteres
 			if (strlen($url) <= 1000) {
