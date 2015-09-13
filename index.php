@@ -175,6 +175,12 @@
 							<label for="url">Please enter an URL</label>
 							<input type="url" class="form-control" id="url" name="url" placeholder="http://example.com">
 						</div>
+						<div class="checkbox">
+							<label>
+								<input type="checkbox" name="domain_specific">
+									Domain specific search
+							</label>
+						</div>
 						<input type="submit" class="btn btn-default">
 					</form>
 				</div>
